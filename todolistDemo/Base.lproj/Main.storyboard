@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Application-->
+        <scene sceneID="JPo-4y-FX3">
+            <objects>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
+                    <connections>
+                        <outlet property="custView" destination="0dI-2z-MAh" id="8ye-f4-mq6"/>
+                        <outlet property="firstItem" destination="dUk-cm-I4k" id="DOC-W9-yN7"/>
+                        <outlet property="mainPop" destination="AYu-sK-qS6" id="uEE-d4-nFQ"/>
+                        <outlet property="scrollTV" destination="BQN-E7-hNo" id="7c5-eL-kYI"/>
+                        <outlet property="selecItem" destination="VMf-EB-mKg" id="UMX-by-YD2"/>
+                    </connections>
+                </customObject>
+                <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customView id="0dI-2z-MAh">
+                    <rect key="frame" x="0.0" y="0.0" width="473" height="96"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="O25-yl-ylH">
+                            <rect key="frame" x="-2" y="35" width="26" height="26"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="22" id="SgZ-7Y-16q"/>
+                                <constraint firstAttribute="width" constant="22" id="Yld-ua-Xjq"/>
+                            </constraints>
+                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Fmu-4Y-nyn">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="checkAction:" target="Voe-Tx-rLC" id="rSX-zY-lhL"/>
+                            </connections>
+                        </button>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Aei-pu-Ea7">
+                            <rect key="frame" x="451" y="34.5" width="22.5" height="28"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="22" id="Ocr-2H-BSD"/>
+                                <constraint firstAttribute="height" constant="22" id="YF9-ag-YN9"/>
+                            </constraints>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="briefcase.fill" catalog="system" id="9ey-vZ-7SD"/>
+                        </imageView>
+                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="BQN-E7-hNo" customClass="ScrollTextView">
+                            <rect key="frame" x="22" y="37" width="421" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="22" id="mQb-ao-Ibl"/>
+                            </constraints>
+                        </customView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="BQN-E7-hNo" firstAttribute="leading" secondItem="O25-yl-ylH" secondAttribute="trailing" id="3zf-0R-6ue"/>
+                        <constraint firstItem="O25-yl-ylH" firstAttribute="centerY" secondItem="0dI-2z-MAh" secondAttribute="centerY" id="DVH-nz-FaV"/>
+                        <constraint firstItem="Aei-pu-Ea7" firstAttribute="leading" secondItem="BQN-E7-hNo" secondAttribute="trailing" constant="8" symbolic="YES" id="Fkn-SX-ebd"/>
+                        <constraint firstItem="Aei-pu-Ea7" firstAttribute="centerY" secondItem="0dI-2z-MAh" secondAttribute="centerY" id="KQO-oZ-hYM"/>
+                        <constraint firstItem="O25-yl-ylH" firstAttribute="leading" secondItem="0dI-2z-MAh" secondAttribute="leading" id="Kln-Ct-3mS"/>
+                        <constraint firstAttribute="trailing" secondItem="Aei-pu-Ea7" secondAttribute="trailing" id="oVn-oo-Y7T"/>
+                        <constraint firstItem="BQN-E7-hNo" firstAttribute="centerY" secondItem="0dI-2z-MAh" secondAttribute="centerY" id="zEa-yy-hmM"/>
+                    </constraints>
+                </customView>
+                <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+                <application id="hnw-xV-0zn" sceneMemberID="viewController">
+                    <menu key="mainMenu" title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
+                        <items>
+                            <menuItem title="Item" id="dUk-cm-I4k" userLabel="fItem">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="RU2-aY-1ST"/>
+                            <menuItem title="Add ToDo" keyEquivalent="[" allowsKeyEquivalentWhenHidden="YES" id="VMf-EB-mKg" userLabel="sItem"/>
+                            <menuItem title="Menu" id="fP9-g6-JGT">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Menu" id="DhD-FI-raD">
+                                    <items>
+                                        <menuItem title="Item" id="IIC-Rn-6KH">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="YA5-Qe-mS6"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem title="About" id="wpr-3q-Mcd">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Quit" keyEquivalent="q" id="4sb-4s-VLi">
+                                <connections>
+                                    <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
+                    </connections>
+                </application>
+            </objects>
+            <point key="canvasLocation" x="75" y="0.0"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="briefcase.fill" catalog="system" width="18" height="15"/>
+    </resources>
+</document>
