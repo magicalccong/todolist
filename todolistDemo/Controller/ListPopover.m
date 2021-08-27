@@ -11,9 +11,9 @@
 #import "CoreDataBase.h"
 #import "ListItemModel.h"
 #import "ListItemCellView.h"
+
 static NSString * cellId = @"CellID";
-@interface ListPopover ()<NSTextViewDelegate,NSTableViewDelegate,NSTableViewDataSource>
-@property (unsafe_unretained) IBOutlet NSTextView *tipContextView;
+@interface ListPopover ()<NSTextViewDelegate,NSTableViewDelegate,NSTableViewDataSource,listItemActionDelegate>
 @property (weak) IBOutlet NSButton *markBtn;
 @property (weak) IBOutlet NSButton *trashBtn;
 @property (weak) IBOutlet NSTableView *listTB;
@@ -21,6 +21,8 @@ static NSString * cellId = @"CellID";
 @property (weak) IBOutlet NSTextField *placeHold;
 @property (weak) IBOutlet NSScrollView *listTBMainV;
 @property (nonatomic, assign) NSInteger globalIndex;
+@property (weak) IBOutlet NSScrollView *tiptextv1;
+
 
 @end
 
@@ -30,10 +32,9 @@ static NSString * cellId = @"CellID";
     [super viewDidLoad];
     [self.view setWantsLayer:YES];
     [[self.view layer] setBackgroundColor:[NSColor colorWithRed:247/255.0 green:242/255.0 blue:239/255.0 alpha:1].CGColor];
-    self.tipContextView.delegate = self;
-    [self.tipContextView setFont:[NSFont fontWithName:@"PingFang SC" size:GFontSize]];
     [self.markBtn setToolTip:@"置顶提醒"];
     [self.trashBtn setToolTip:@"删除便签"];
+    self.globalIndex = 0;
     self.listTB.delegate = self;
     self.listTB.dataSource = self;
     self.dataSource = [[NSMutableArray alloc]init];
@@ -52,7 +53,7 @@ static NSString * cellId = @"CellID";
     }
     NSNib * tmpNib = [[NSNib alloc]initWithNibNamed:@"ListItemCellView" bundle:nil];
     [self.listTB registerNib:tmpNib forIdentifier:cellId];
-    [self.listTB setRowHeight:24];
+    self.listTBMainV.hasHorizontalScroller = NO;
     
 }
 
@@ -61,6 +62,7 @@ static NSString * cellId = @"CellID";
         self.placeHold.hidden = YES;
         self.listTBMainV.hidden = NO;
     }else{
+        [self.tiptextv1.documentView removeFromSuperview];
         self.placeHold.hidden = NO;
         self.listTBMainV.hidden = YES;
     }
@@ -68,38 +70,64 @@ static NSString * cellId = @"CellID";
 }
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     ListItemCellView * cell = [tableView makeViewWithIdentifier:cellId owner:nil];
+    cell.delegate = self;
     if (self.dataSource.count) {
-        ListItemModel * model = self.dataSource[row];
         cell.model = self.dataSource[row];
-        NSLog(@"row %ld=== %@",row,model.contentTX);
     }
     return cell;
 }
 
 -(void)tableViewSelectionDidChange:(NSNotification *)notification {
     NSTableView * tbv = notification.object;
+    self.globalIndex = tbv.selectedRow >= 0 ? tbv.selectedRow : 0;
     if (tbv.selectedRow >= 0) {
         ListItemModel * model = self.dataSource[tbv.selectedRow];
-        self.tipContextView.string = model.contentTX;
-        self.globalIndex = tbv.selectedRow;
-        NSLog(@"string == %@ -- %ld --id %ld",model.contentTX,self.globalIndex,model.cellsortID);
+        [self makeTextV:model.contentTX];
+//        self.tipContextView.string = model.contentTX;
+//        NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
+//        ListItemModel * model = tmpArr[tbv.selectedRow];
+//        [self setTextViewShowwithString:model.contentTX];
+        NSLog(@"%ld --- %@", (long)tbv.selectedRow,model.contentTX);
     }
-    NSLog(@"%ld %ld %lf %lf", (long)tbv.selectedRow , (long)tbv.selectedColumn, [tbv frameOfCellAtColumn:0 row:1].size.width,self.listTB.layer.frame.size.width);
 }
+
+
 #pragma mark - textview delegate
--(void)textDidChange:(NSNotification *)notification {
+-(void)textDidEndEditing:(NSNotification *)notification {
     NSTextView * tmp = notification.object;
-    if (self.listTB.selectedRow >= 0) {
-        self.globalIndex = self.listTB.selectedRow;
+//    NSInteger i = self.listTB.selectedRow >= 0 ? self.listTB.selectedRow : 0;
+//    ListItemModel * model = self.dataSource[i];
+//    tmp.string = model.contentTX;
+//    self.dataSource[self.globalIndex] = model;
+    NSLog(@"end ==== %@ ===== %ld ==== %ld",tmp.string,self.listTB.selectedRow,self.globalIndex);
+}
+-(void)textDidChange:(NSNotification *)notification {
+    if (self.dataSource.count == 0) {
+        return;
     }
-    ListItemModel * model = self.dataSource[self.globalIndex];
+    NSTextView * tmp = notification.object;
+    NSLog(@"id %@ - %ld - string %@ ",tmp.identifier,self.globalIndex,tmp.string);
+    NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
+    NSLog(@"tmpString %@",tmp.string);
+    ListItemModel * model = tmpArr[self.globalIndex];
     model.contentTX = tmp.string;
-    self.dataSource[self.globalIndex] = model;
+    self.dataSource = [NSMutableArray arrayWithArray:tmpArr];
     [self.listTB reloadData];
-    for (ListItemModel * tmpM in self.dataSource) {
-        NSLog(@"内容 %@ === %ld -- id %ld",tmpM.contentTX,self.globalIndex,model.cellsortID);
-    }
-    NSLog(@"%ld---%@--%ld",self.globalIndex,model.contentTX,model.cellsortID);
+//    [self.listTB reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+
+}
+#pragma mark - 自定义代理
+-(void)changeDoneStatus:(BOOL)status cellID:(NSInteger)cellID{
+    NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
+    [tmpArr enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        ListItemModel * model = obj;
+        if (model.cellsortID == cellID) {
+            model.isDone = status;
+            *stop = YES;
+        }
+    }];
+    [self.listTB reloadData];
+
 }
 
 #pragma mark - 按钮事件
@@ -116,28 +144,46 @@ static NSString * cellId = @"CellID";
         [self.listTB reloadData];
         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
         [self.listTB selectRowIndexes:indexSet byExtendingSelection:NO];
+        if (self.dataSource.count == 0) {
+            return;
+        }
         ListItemModel * model = self.dataSource.firstObject;
-        self.tipContextView.string = model.contentTX?model.contentTX:@"";
+        [self makeTextV:model.contentTX];
     }
     
     
 }
 
 - (IBAction)addItemAction:(NSButton *)sender {
-    self.tipContextView.string = @"";
-    [self.view.window makeFirstResponder:self.tipContextView];
+//    [self setTextViewShowwithString:@""];
+    [self makeTextV:@""];
     ListItemModel * model = [[ListItemModel alloc]init];
-    model.contentTX = @"新建事项";
+    model.contentTX = [NSString stringWithFormat:@"新建事项-%ld",self.dataSource.count+1];
     model.isDone = NO;
     model.markTop = NO;
     model.cellsortID = self.dataSource.count + 1;
 //    self.trashBtn.tag = model.cellsortID;
-    [self.dataSource addObject:model];
+    [self.dataSource insertObject:model atIndex:0];
     [self.listTB reloadData];
-    self.globalIndex = self.dataSource.count - 1;
+    [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+    self.globalIndex = 0;
+//    self.tipContextView.string = @"";
 
 }
-- (IBAction)settingAction:(NSButton *)sender {
+- (void)makeTextV:(NSString *)textString {
+    [self.tiptextv1.documentView removeFromSuperview];
+    NSTextView * textV = [[NSTextView alloc]initWithFrame:self.tiptextv1.frame];
+    textV.delegate = self;
+    [textV setDefaultStyle];
+    textV.string = textString;
+    [self.view addSubview:textV];
+    [self.tiptextv1 setDocumentView:textV];
+    [self.view.window makeFirstResponder:textV];
+    NSLog(@"%@",self.tiptextv1.documentView);
+}
 
+- (IBAction)settingAction:(NSButton *)sender {
+    self.dataSource = [NSMutableArray array];
+    [self.listTB reloadData];
 }
 @end

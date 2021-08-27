@@ -10,6 +10,30 @@
 static NSAttributedString *placeHolderString;
 
 @implementation NSTextView (ChangeAtt)
+-(void)setDefaultStyle {
+        [self setFont:[NSFont fontWithName:@"PingFang SC" size:GFontSize]];
+        self.insertionPointColor = [NSColor systemYellowColor];
+        self.editable = YES;
+        self.selectable = YES;
+        self.allowsUndo = YES;
+        self.continuousSpellCheckingEnabled = YES;
+        self.automaticSpellingCorrectionEnabled = YES;
+        self.grammarCheckingEnabled = YES;
+        self.smartInsertDeleteEnabled = YES;
+        self.automaticDashSubstitutionEnabled = YES;
+        self.automaticQuoteSubstitutionEnabled = YES;
+        self.automaticTextCompletionEnabled = YES;
+        self.automaticTextReplacementEnabled = YES;
+        [self setEnabledTextCheckingTypes:NSTextCheckingTypeLink];
+        self.backgroundColor = [NSColor colorWithRed:247/255.0 green:242/255.0 blue:239/255.0 alpha:1.0f];
+        [self setLinkTextAttributes:@{
+            NSForegroundColorAttributeName:[NSColor systemYellowColor],       NSUnderlineStyleAttributeName:@(NSUnderlineStyleSingle),
+            NSCursorAttributeName:[NSCursor pointingHandCursor]
+        }];//设置链接颜色及更改光标
+}
+- (void)viewDidMoveToWindow {
+    NSLog(@"movetowindow");
+}
 -(BOOL)performKeyEquivalent:(NSEvent *)event {
     if (([event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask) == NSEventModifierFlagCommand) {
             // The command key is the ONLY modifier key being pressed.
@@ -27,36 +51,6 @@ static NSAttributedString *placeHolderString;
             } 
         }
         return [super performKeyEquivalent:event];
-}
-+(void)initialize
-{
-  static BOOL initialized = NO;
-  if (!initialized)
-{
-     NSColor *txtColor = [NSColor redColor];
-     NSDictionary *txtDict = [NSDictionary dictionaryWithObjectsAndKeys:txtColor, NSForegroundColorAttributeName, nil];
-     placeHolderString = [[NSAttributedString alloc] initWithString:@"请输入内容..." attributes:txtDict];
-    
- }
-}
-
-- (BOOL)becomeFirstResponder
-{
-  [self setNeedsDisplay:YES];
-  return [super becomeFirstResponder];
-}
-
-- (void)drawRect:(NSRect)rect
-{
-  [super drawRect:rect];
- if ([[self string] isEqualToString:@""] && self != [[self window] firstResponder])
- [placeHolderString drawAtPoint:NSMakePoint(0,0)];
-}
-
-- (BOOL)resignFirstResponder
-{
-   [self setNeedsDisplay:YES];
-   return [super resignFirstResponder];
 }
 
 @end

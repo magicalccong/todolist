@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSTextView (ChangeAtt)
-
+-(void)setDefaultStyle;
 @end
 
 NS_ASSUME_NONNULL_END
