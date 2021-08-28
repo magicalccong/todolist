@@ -2,7 +2,7 @@
 //  ListItem+CoreDataProperties.h
 //  todolistDemo
 //
-//  Created by Lgc on 2021/7/31.
+//  Created by Lgc on 2021/8/28.
 //
 //
 
@@ -15,11 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSFetchRequest<ListItem *> *)fetchRequest;
 
-@property (nonatomic) BOOL markTop;
-@property (nonatomic) int64_t cellsortID;
-@property (nonatomic) BOOL isDone;
-@property (nullable, nonatomic, copy) NSString *contentTX;
 @property (nullable, nonatomic, copy) NSDate *alertTime;
+@property (nonatomic) int64_t cellsortID;
+@property (nullable, nonatomic, copy) NSString *contentTX;
+@property (nonatomic) BOOL isDone;
+@property (nonatomic) BOOL markTop;
+@property (nullable, nonatomic, copy) NSString *cellTitle;
 
 @end
 

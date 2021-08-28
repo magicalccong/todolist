@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		119F74FA26DA3ACD001FA548 /* ListItem+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 119F74F926DA3ACD001FA548 /* ListItem+CoreDataProperties.m */; };
 		11D632EF26B5D712004315A2 /* CoreDataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D632EE26B5D712004315A2 /* CoreDataBase.m */; };
 		11D632F226B7EC04004315A2 /* ListItemCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D632F126B7EC04004315A2 /* ListItemCellView.m */; };
 		11D632F426B7EC1A004315A2 /* ListItemCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 11D632F326B7EC1A004315A2 /* ListItemCellView.xib */; };
@@ -27,7 +28,6 @@
 		11EBD28526B3312900064B47 /* ListItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EBD28426B3312900064B47 /* ListItemModel.m */; };
 		11EBD2CD26B4550F00064B47 /* SaveModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 11EBD2CB26B4550F00064B47 /* SaveModel.xcdatamodeld */; };
 		11EBD2D226B46C6600064B47 /* ListItem+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EBD2D026B46C6600064B47 /* ListItem+CoreDataClass.m */; };
-		11EBD2D326B46C6600064B47 /* ListItem+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 11EBD2D126B46C6600064B47 /* ListItem+CoreDataProperties.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		119F74F826DA3ACD001FA548 /* ListItem+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ListItem+CoreDataProperties.h"; sourceTree = "<group>"; };
+		119F74F926DA3ACD001FA548 /* ListItem+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ListItem+CoreDataProperties.m"; sourceTree = "<group>"; };
 		11D632ED26B5D712004315A2 /* CoreDataBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataBase.h; sourceTree = "<group>"; };
 		11D632EE26B5D712004315A2 /* CoreDataBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataBase.m; sourceTree = "<group>"; };
 		11D632F026B7EC04004315A2 /* ListItemCellView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ListItemCellView.h; sourceTree = "<group>"; };
@@ -85,10 +87,8 @@
 		11EBD28326B3312900064B47 /* ListItemModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ListItemModel.h; sourceTree = "<group>"; };
 		11EBD28426B3312900064B47 /* ListItemModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ListItemModel.m; sourceTree = "<group>"; };
 		11EBD2CC26B4550F00064B47 /* SaveModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SaveModel.xcdatamodel; sourceTree = "<group>"; };
-		11EBD2CE26B46C6600064B47 /* ListItem+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ListItem+CoreDataProperties.h"; sourceTree = "<group>"; };
 		11EBD2CF26B46C6600064B47 /* ListItem+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ListItem+CoreDataClass.h"; sourceTree = "<group>"; };
 		11EBD2D026B46C6600064B47 /* ListItem+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ListItem+CoreDataClass.m"; sourceTree = "<group>"; };
-		11EBD2D126B46C6600064B47 /* ListItem+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ListItem+CoreDataProperties.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,8 +218,8 @@
 			children = (
 				11EBD2CF26B46C6600064B47 /* ListItem+CoreDataClass.h */,
 				11EBD2D026B46C6600064B47 /* ListItem+CoreDataClass.m */,
-				11EBD2CE26B46C6600064B47 /* ListItem+CoreDataProperties.h */,
-				11EBD2D126B46C6600064B47 /* ListItem+CoreDataProperties.m */,
+				119F74F826DA3ACD001FA548 /* ListItem+CoreDataProperties.h */,
+				119F74F926DA3ACD001FA548 /* ListItem+CoreDataProperties.m */,
 				11EBD28326B3312900064B47 /* ListItemModel.h */,
 				11EBD28426B3312900064B47 /* ListItemModel.m */,
 				11D632ED26B5D712004315A2 /* CoreDataBase.h */,
@@ -358,9 +358,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				119F74FA26DA3ACD001FA548 /* ListItem+CoreDataProperties.m in Sources */,
 				11EBD2D226B46C6600064B47 /* ListItem+CoreDataClass.m in Sources */,
 				11EBD27E26B32DFC00064B47 /* AddListItem.m in Sources */,
-				11EBD2D326B46C6600064B47 /* ListItem+CoreDataProperties.m in Sources */,
 				11EBD24C26A885E900064B47 /* NSTextField+deleLine.m in Sources */,
 				11EBD28526B3312900064B47 /* ListItemModel.m in Sources */,
 				11EBD21A26A5E98200064B47 /* ViewController.m in Sources */,

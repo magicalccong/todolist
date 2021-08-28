@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ListPopover">
             <connections>
+                <outlet property="addBtn" destination="gx6-Pi-grC" id="FVI-ET-gc9"/>
                 <outlet property="listTB" destination="duC-ND-HV4" id="HP6-hc-hpG"/>
                 <outlet property="listTBMainV" destination="hIZ-1Z-ixv" id="ijc-Kj-9Xs"/>
                 <outlet property="markBtn" destination="mBt-1p-omP" id="3zA-ph-e8i"/>

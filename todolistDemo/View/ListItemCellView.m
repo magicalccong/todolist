@@ -22,14 +22,18 @@
 }
 - (void)setModel:(ListItemModel *)model {
     self.senderM = model;
-    self.checkBox.hidden = model.isDone;
+    if (model.isDone || [model.contentTX isEqualToString:@""]) {
+        self.checkBox.hidden = YES;
+    }else {
+        self.checkBox.hidden = NO;
+    }
     self.checkBox.state = model.isDone;
     self.lineView.hidden = YES;
     if (model.markTop && !model.isDone) {
         self.lineView.hidden = NO;
         self.lineView.layer.backgroundColor = [NSColor redColor].CGColor;
     }
-    self.contextLabel.stringValue = model.contentTX;
+    self.contextLabel.stringValue = model.cellTitle;
     [self.contextLabel doDraw:model.isDone orignColor:[NSColor colorWithRed:33/255.0 green:19/255.0 blue:13/255.0 alpha:1.0f]];
     self.contextLabel.maximumNumberOfLines = 1;
 }

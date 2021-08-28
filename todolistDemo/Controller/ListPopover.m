@@ -22,6 +22,7 @@ static NSString * cellId = @"CellID";
 @property (weak) IBOutlet NSScrollView *listTBMainV;
 @property (nonatomic, assign) NSInteger globalIndex;
 @property (weak) IBOutlet NSScrollView *tiptextv1;
+@property (nonatomic, weak) IBOutlet NSButton *addBtn;
 
 
 @end
@@ -66,12 +67,21 @@ static NSString * cellId = @"CellID";
         self.placeHold.hidden = NO;
         self.listTBMainV.hidden = YES;
     }
+    self.addBtn.enabled = YES;
     return self.dataSource.count;
 }
+
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     ListItemCellView * cell = [tableView makeViewWithIdentifier:cellId owner:nil];
     cell.delegate = self;
     if (self.dataSource.count) {
+        ListItemModel * tmpM = self.dataSource[row];
+        if (self.globalIndex == row) {
+            self.addBtn.enabled = YES;
+        }
+        if ([tmpM.contentTX isEqualToString:@""]) {
+            self.addBtn.enabled = NO;
+        }
         cell.model = self.dataSource[row];
     }
     return cell;
@@ -82,7 +92,20 @@ static NSString * cellId = @"CellID";
     self.globalIndex = tbv.selectedRow >= 0 ? tbv.selectedRow : 0;
     if (tbv.selectedRow >= 0) {
         ListItemModel * model = self.dataSource[tbv.selectedRow];
-        [self makeTextV:model.contentTX];
+        [self makeTextV:model.contentTX shouldBeFirst:NO];
+        NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
+        for (ListItemModel * tmp in tmpArr) {
+            if ([tmp.contentTX isEqualToString:@""]&&model.cellsortID != tmp.cellsortID) {
+                [self.dataSource removeObject:tmp];
+                if (self.globalIndex) {
+                    self.globalIndex -= 1;
+                }
+                [self.listTB reloadData];
+                [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] byExtendingSelection:NO];
+              
+
+            }
+        }
 //        self.tipContextView.string = model.contentTX;
 //        NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
 //        ListItemModel * model = tmpArr[tbv.selectedRow];
@@ -93,27 +116,18 @@ static NSString * cellId = @"CellID";
 
 
 #pragma mark - textview delegate
--(void)textDidEndEditing:(NSNotification *)notification {
-    NSTextView * tmp = notification.object;
-//    NSInteger i = self.listTB.selectedRow >= 0 ? self.listTB.selectedRow : 0;
-//    ListItemModel * model = self.dataSource[i];
-//    tmp.string = model.contentTX;
-//    self.dataSource[self.globalIndex] = model;
-    NSLog(@"end ==== %@ ===== %ld ==== %ld",tmp.string,self.listTB.selectedRow,self.globalIndex);
-}
 -(void)textDidChange:(NSNotification *)notification {
     if (self.dataSource.count == 0) {
         return;
     }
     NSTextView * tmp = notification.object;
-    NSLog(@"id %@ - %ld - string %@ ",tmp.identifier,self.globalIndex,tmp.string);
-    NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
     NSLog(@"tmpString %@",tmp.string);
-    ListItemModel * model = tmpArr[self.globalIndex];
+    ListItemModel * model = self.dataSource[self.globalIndex];
     model.contentTX = tmp.string;
-    self.dataSource = [NSMutableArray arrayWithArray:tmpArr];
-    [self.listTB reloadData];
-//    [self.listTB reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+    model.cellTitle = [tmp.string isEqualToString:@""]?@"新建备忘录":tmp.string;
+    model.isDone = NO;
+//    [self.listTB reloadData];
+    [self.listTB reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 
 }
 #pragma mark - 自定义代理
@@ -142,13 +156,20 @@ static NSString * cellId = @"CellID";
     if (self.listTB.selectedRow >= 0) {
         [self.dataSource removeObjectAtIndex:self.listTB.selectedRow];
         [self.listTB reloadData];
-        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:0];
+        CGFloat nextIndex = 0;
+        if (self.globalIndex<self.dataSource.count) {
+            nextIndex = self.globalIndex;
+        }else {
+            nextIndex = self.dataSource.count-1;
+        }
+        NSLog(@"==== %lf",nextIndex);
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:nextIndex];
         [self.listTB selectRowIndexes:indexSet byExtendingSelection:NO];
         if (self.dataSource.count == 0) {
             return;
         }
         ListItemModel * model = self.dataSource.firstObject;
-        [self makeTextV:model.contentTX];
+        [self makeTextV:model.contentTX shouldBeFirst:NO];
     }
     
     
@@ -156,21 +177,23 @@ static NSString * cellId = @"CellID";
 
 - (IBAction)addItemAction:(NSButton *)sender {
 //    [self setTextViewShowwithString:@""];
-    [self makeTextV:@""];
     ListItemModel * model = [[ListItemModel alloc]init];
-    model.contentTX = [NSString stringWithFormat:@"新建事项-%ld",self.dataSource.count+1];
+    model.cellTitle = @"新建备忘录";
     model.isDone = NO;
     model.markTop = NO;
     model.cellsortID = self.dataSource.count + 1;
+    model.contentTX = @"";
 //    self.trashBtn.tag = model.cellsortID;
     [self.dataSource insertObject:model atIndex:0];
     [self.listTB reloadData];
     [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     self.globalIndex = 0;
+    [self makeTextV:@"" shouldBeFirst:YES];
+
 //    self.tipContextView.string = @"";
 
 }
-- (void)makeTextV:(NSString *)textString {
+- (void)makeTextV:(NSString *)textString shouldBeFirst:(BOOL)should{
     [self.tiptextv1.documentView removeFromSuperview];
     NSTextView * textV = [[NSTextView alloc]initWithFrame:self.tiptextv1.frame];
     textV.delegate = self;
@@ -178,8 +201,9 @@ static NSString * cellId = @"CellID";
     textV.string = textString;
     [self.view addSubview:textV];
     [self.tiptextv1 setDocumentView:textV];
-    [self.view.window makeFirstResponder:textV];
-    NSLog(@"%@",self.tiptextv1.documentView);
+    if (should) {
+        [self.view.window makeFirstResponder:textV];
+    }
 }
 
 - (IBAction)settingAction:(NSButton *)sender {

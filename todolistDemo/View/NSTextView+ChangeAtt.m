@@ -31,9 +31,7 @@ static NSAttributedString *placeHolderString;
             NSCursorAttributeName:[NSCursor pointingHandCursor]
         }];//设置链接颜色及更改光标
 }
-- (void)viewDidMoveToWindow {
-    NSLog(@"movetowindow");
-}
+
 -(BOOL)performKeyEquivalent:(NSEvent *)event {
     if (([event modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask) == NSEventModifierFlagCommand) {
             // The command key is the ONLY modifier key being pressed.

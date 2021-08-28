@@ -97,6 +97,7 @@
     item.contentTX = [model valueForKey:@"contentTX"];
     item.isDone = [[model valueForKey:@"isDone"] boolValue];
     item.markTop = [[model valueForKey:@"markTop"] boolValue];
+    item.cellTitle = [model valueForKey:@"cellTitle"];
 //    item.alertTime = model.alertTime;
 //    item.cellsortID = model.cellsortID;
 //    item.contentTX = model.contentTX;

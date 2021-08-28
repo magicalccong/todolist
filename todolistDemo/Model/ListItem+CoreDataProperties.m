@@ -2,7 +2,7 @@
 //  ListItem+CoreDataProperties.m
 //  todolistDemo
 //
-//  Created by Lgc on 2021/7/31.
+//  Created by Lgc on 2021/8/28.
 //
 //
 
@@ -14,10 +14,11 @@
 	return [NSFetchRequest fetchRequestWithEntityName:@"ListItem"];
 }
 
-@dynamic markTop;
-@dynamic cellsortID;
-@dynamic isDone;
-@dynamic contentTX;
 @dynamic alertTime;
+@dynamic cellsortID;
+@dynamic contentTX;
+@dynamic isDone;
+@dynamic markTop;
+@dynamic cellTitle;
 
 @end
