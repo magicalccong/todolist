@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak) IBOutlet NSView *lineView;
 @property (nonatomic, strong) ListItemModel * model;
 @property (nonatomic, weak) id<listItemActionDelegate> delegate;
+@property (weak) IBOutlet NSTextField *editTimeLabel;
 @end
 
 NS_ASSUME_NONNULL_END

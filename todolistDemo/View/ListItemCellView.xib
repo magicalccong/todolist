@@ -9,17 +9,17 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe" customClass="ListItemCellView">
-            <rect key="frame" x="0.0" y="0.0" width="660" height="16"/>
+            <rect key="frame" x="0.0" y="0.0" width="660" height="29"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oca-fC-OZ4">
-                    <rect key="frame" x="22" y="0.0" width="5" height="16"/>
+                    <rect key="frame" x="22" y="0.0" width="5" height="29"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="5" id="aon-u5-cqw"/>
                     </constraints>
                 </customView>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ijy-nE-RlL">
-                    <rect key="frame" x="-2" y="-5" width="26" height="26"/>
+                    <rect key="frame" x="-2" y="2" width="26" height="26"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="XC9-yf-83o"/>
                         <constraint firstAttribute="width" constant="22" id="pHW-0Y-Lzi"/>
@@ -33,7 +33,7 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TaV-cn-tH0">
-                    <rect key="frame" x="25" y="0.0" width="637" height="16"/>
+                    <rect key="frame" x="25" y="13" width="637" height="16"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="16" id="FiA-tD-gLg"/>
                     </constraints>
@@ -43,23 +43,38 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LkW-ps-Rij">
+                    <rect key="frame" x="25" y="0.0" width="637" height="13"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="Sj1-qa-efD">
+                        <dateFormatter key="formatter" dateStyle="short" timeStyle="medium" doesRelativeDateFormatting="YES" id="HRb-Pd-wOq"/>
+                        <font key="font" metaFont="system" size="10"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <constraints>
-                <constraint firstItem="TaV-cn-tH0" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="5QU-J5-76N"/>
                 <constraint firstItem="Ijy-nE-RlL" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="5aF-Ii-2tN"/>
                 <constraint firstItem="Ijy-nE-RlL" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="DIo-zg-Kzr"/>
                 <constraint firstAttribute="bottom" secondItem="oca-fC-OZ4" secondAttribute="bottom" id="IBo-7d-npL"/>
                 <constraint firstItem="TaV-cn-tH0" firstAttribute="leading" secondItem="oca-fC-OZ4" secondAttribute="trailing" id="UVX-md-kv0"/>
                 <constraint firstItem="oca-fC-OZ4" firstAttribute="leading" secondItem="Ijy-nE-RlL" secondAttribute="trailing" id="Xbe-IY-vzA"/>
+                <constraint firstAttribute="bottom" secondItem="LkW-ps-Rij" secondAttribute="bottom" id="Zou-z3-IJI"/>
+                <constraint firstAttribute="trailing" secondItem="LkW-ps-Rij" secondAttribute="trailing" id="dva-b9-s7f"/>
+                <constraint firstItem="LkW-ps-Rij" firstAttribute="leading" secondItem="oca-fC-OZ4" secondAttribute="trailing" id="eku-QG-xlq"/>
                 <constraint firstAttribute="trailing" secondItem="TaV-cn-tH0" secondAttribute="trailing" id="hzg-2B-2Qc"/>
+                <constraint firstItem="TaV-cn-tH0" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="ovH-Kk-Jf5"/>
+                <constraint firstItem="LkW-ps-Rij" firstAttribute="top" secondItem="TaV-cn-tH0" secondAttribute="bottom" id="rlx-ne-VQh"/>
                 <constraint firstItem="oca-fC-OZ4" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="ycG-dB-WmT"/>
             </constraints>
             <connections>
                 <outlet property="checkBox" destination="Ijy-nE-RlL" id="7V0-Re-Yqf"/>
                 <outlet property="contextLabel" destination="TaV-cn-tH0" id="QsM-bR-Wrt"/>
+                <outlet property="editTimeDateFormatter" destination="HRb-Pd-wOq" id="Ntm-1F-SGw"/>
+                <outlet property="editTimeLabel" destination="LkW-ps-Rij" id="UHP-qh-j36"/>
                 <outlet property="lineView" destination="oca-fC-OZ4" id="Rzb-xF-gIc"/>
             </connections>
-            <point key="canvasLocation" x="119" y="163"/>
+            <point key="canvasLocation" x="119" y="174"/>
         </customView>
     </objects>
 </document>

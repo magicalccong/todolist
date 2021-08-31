@@ -64,6 +64,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showMyPopover:) name:@"showPop" object:nil];
     //注册全局hotkey
     [self addGlobalHotKey:kVK_ANSI_L];
+    
 }
 /**
  * 添加全局的快捷键
@@ -97,6 +98,7 @@ OSStatus GlobalHotKeyHandler(EventHandlerCallRef nextHandler,EventRef theEvent,
         case kVK_ANSI_L: //do something
         {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"showPop" object:nil];
+            [NSApp activateIgnoringOtherApps:YES];
         }
             break;
         default:

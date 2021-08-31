@@ -2,7 +2,7 @@
 //  ListItem+CoreDataProperties.h
 //  todolistDemo
 //
-//  Created by Lgc on 2021/8/28.
+//  Created by Lgc on 2021/9/1.
 //
 //
 
@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL isDone;
 @property (nonatomic) BOOL markTop;
 @property (nullable, nonatomic, copy) NSString *cellTitle;
+@property (nullable, nonatomic, copy) NSDate *editTime;
 
 @end
 

@@ -2,7 +2,7 @@
 //  ListItem+CoreDataProperties.m
 //  todolistDemo
 //
-//  Created by Lgc on 2021/8/28.
+//  Created by Lgc on 2021/9/1.
 //
 //
 
@@ -20,5 +20,6 @@
 @dynamic isDone;
 @dynamic markTop;
 @dynamic cellTitle;
+@dynamic editTime;
 
 @end

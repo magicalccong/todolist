@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString * contentTX;//内容
 @property (nonatomic, strong)  NSDate * _Nullable alertTime;//提醒时间
 @property (nonatomic, strong) NSString * cellTitle;//显示标题
+@property (nonatomic, strong) NSDate * editTime;//编辑时间
 
 -(instancetype)initWithDic:(NSDictionary *)dic;
 

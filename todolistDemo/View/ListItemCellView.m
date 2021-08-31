@@ -11,18 +11,19 @@
 @interface ListItemCellView()
 
 @property (nonatomic, strong) ListItemModel * senderM;
+@property (weak) IBOutlet NSDateFormatter *editTimeDateFormatter;
 
 @end
 
 @implementation ListItemCellView
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    self.layer.frame = CGRectMake(8, 0, 160, 24);
+    self.layer.frame = CGRectMake(8, 0, 160, 30);
     // Drawing code here.
 }
 - (void)setModel:(ListItemModel *)model {
     self.senderM = model;
-    if (model.isDone || [model.contentTX isEqualToString:@""]) {
+    if ([model.contentTX isEqualToString:@""]) {
         self.checkBox.hidden = YES;
     }else {
         self.checkBox.hidden = NO;
@@ -36,10 +37,7 @@
     self.contextLabel.stringValue = model.cellTitle;
     [self.contextLabel doDraw:model.isDone orignColor:[NSColor colorWithRed:33/255.0 green:19/255.0 blue:13/255.0 alpha:1.0f]];
     self.contextLabel.maximumNumberOfLines = 1;
-}
--(void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {
-    [super setBackgroundStyle:backgroundStyle];
-//    self.layer.backgroundColor = [NSColor whiteColor].CGColor;
+    self.editTimeLabel.stringValue = [self.editTimeDateFormatter stringFromDate:model.editTime];
 }
 - (IBAction)checkdone:(NSButton *)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(changeDoneStatus:cellID:)]) {

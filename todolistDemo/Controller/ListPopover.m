@@ -11,8 +11,9 @@
 #import "CoreDataBase.h"
 #import "ListItemModel.h"
 #import "ListItemCellView.h"
-
+#import "ListItemRowView.h"
 static NSString * cellId = @"CellID";
+static NSString * rowId = @"RowID";
 @interface ListPopover ()<NSTextViewDelegate,NSTableViewDelegate,NSTableViewDataSource,listItemActionDelegate>
 @property (weak) IBOutlet NSButton *markBtn;
 @property (weak) IBOutlet NSButton *trashBtn;
@@ -55,7 +56,6 @@ static NSString * cellId = @"CellID";
     NSNib * tmpNib = [[NSNib alloc]initWithNibNamed:@"ListItemCellView" bundle:nil];
     [self.listTB registerNib:tmpNib forIdentifier:cellId];
     self.listTBMainV.hasHorizontalScroller = NO;
-    
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
@@ -86,7 +86,14 @@ static NSString * cellId = @"CellID";
     }
     return cell;
 }
-
+-(NSTableRowView *)tableView:(NSTableView *)tableView rowViewForRow:(NSInteger)row {
+    ListItemRowView * rowV = [tableView makeViewWithIdentifier:rowId owner:self];
+    if (!rowV) {
+        rowV = [[ListItemRowView alloc]init];
+        rowV.identifier = rowId;
+    }
+    return rowV;
+}
 -(void)tableViewSelectionDidChange:(NSNotification *)notification {
     NSTableView * tbv = notification.object;
     self.globalIndex = tbv.selectedRow >= 0 ? tbv.selectedRow : 0;
@@ -102,15 +109,9 @@ static NSString * cellId = @"CellID";
                 }
                 [self.listTB reloadData];
                 [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] byExtendingSelection:NO];
-              
-
+                break;
             }
         }
-//        self.tipContextView.string = model.contentTX;
-//        NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
-//        ListItemModel * model = tmpArr[tbv.selectedRow];
-//        [self setTextViewShowwithString:model.contentTX];
-        NSLog(@"%ld --- %@", (long)tbv.selectedRow,model.contentTX);
     }
 }
 
@@ -121,11 +122,11 @@ static NSString * cellId = @"CellID";
         return;
     }
     NSTextView * tmp = notification.object;
-    NSLog(@"tmpString %@",tmp.string);
     ListItemModel * model = self.dataSource[self.globalIndex];
     model.contentTX = tmp.string;
     model.cellTitle = [tmp.string isEqualToString:@""]?@"新建备忘录":tmp.string;
     model.isDone = NO;
+    model.editTime = [NSDate date];
 //    [self.listTB reloadData];
     [self.listTB reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
 
@@ -162,7 +163,6 @@ static NSString * cellId = @"CellID";
         }else {
             nextIndex = self.dataSource.count-1;
         }
-        NSLog(@"==== %lf",nextIndex);
         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:nextIndex];
         [self.listTB selectRowIndexes:indexSet byExtendingSelection:NO];
         if (self.dataSource.count == 0) {
@@ -183,6 +183,7 @@ static NSString * cellId = @"CellID";
     model.markTop = NO;
     model.cellsortID = self.dataSource.count + 1;
     model.contentTX = @"";
+    model.editTime = [NSDate date];
 //    self.trashBtn.tag = model.cellsortID;
     [self.dataSource insertObject:model atIndex:0];
     [self.listTB reloadData];
