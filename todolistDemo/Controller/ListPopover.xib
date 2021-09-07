@@ -10,8 +10,9 @@
                 <outlet property="addBtn" destination="gx6-Pi-grC" id="FVI-ET-gc9"/>
                 <outlet property="listTB" destination="duC-ND-HV4" id="HP6-hc-hpG"/>
                 <outlet property="listTBMainV" destination="hIZ-1Z-ixv" id="ijc-Kj-9Xs"/>
-                <outlet property="markBtn" destination="mBt-1p-omP" id="3zA-ph-e8i"/>
+                <outlet property="markBtn" destination="mBt-1p-omP" id="lnO-xk-kJb"/>
                 <outlet property="placeHold" destination="h2L-pI-k6n" id="5hK-Iq-a9c"/>
+                <outlet property="startEditBtn" destination="il4-oa-uOq" id="Pa5-qM-1lC"/>
                 <outlet property="tipContextView" destination="lUZ-BW-6IU" id="SWC-19-IiD"/>
                 <outlet property="tiptextv1" destination="obc-F3-Fsu" id="Czb-Bk-Bb9"/>
                 <outlet property="trashBtn" destination="jhZ-hr-aFa" id="vbg-ti-Jwz"/>
@@ -39,13 +40,13 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="30" horizontalPageScroll="10" verticalLineScroll="30" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="hIZ-1Z-ixv" userLabel="Table View">
+                <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="32" horizontalPageScroll="10" verticalLineScroll="32" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="hIZ-1Z-ixv" userLabel="Table View">
                     <rect key="frame" x="0.0" y="0.0" width="160" height="210"/>
                     <clipView key="contentView" drawsBackground="NO" id="KHl-9p-7o0">
                         <rect key="frame" x="0.0" y="0.0" width="160" height="210"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="30" rowSizeStyle="automatic" viewBased="YES" id="duC-ND-HV4">
+                            <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" selectionHighlightStyle="sourceList" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="32" rowSizeStyle="automatic" viewBased="YES" id="duC-ND-HV4">
                                 <rect key="frame" x="0.0" y="0.0" width="160" height="210"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <size key="intercellSpacing" width="17" height="0.0"/>
@@ -65,7 +66,7 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView id="wJ5-rk-Toc" customClass="ListItemCellView">
-                                                <rect key="frame" x="18" y="0.0" width="123" height="30"/>
+                                                <rect key="frame" x="18" y="0.0" width="123" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </tableCellView>
                                         </prototypeCellViews>
@@ -121,8 +122,8 @@
                         <constraint firstAttribute="width" constant="20" id="1zG-3w-NUH"/>
                         <constraint firstAttribute="height" constant="16" id="z4b-vN-w85"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="bookmark" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="aX6-5P-eQe">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="bookmark" catalog="system" imagePosition="only" alignment="center" alternateImage="bookmark.fill" imageScaling="proportionallyUpOrDown" inset="2" id="aX6-5P-eQe">
+                        <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                         <string key="keyEquivalent">m</string>
                         <modifierMask key="keyEquivalentModifierMask" command="YES"/>
@@ -186,12 +187,23 @@
                         <action selector="settingAction:" target="-2" id="N90-qV-Vjw"/>
                     </connections>
                 </button>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="il4-oa-uOq" userLabel="startEdit">
+                    <rect key="frame" x="169" y="8" width="220" height="197"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="qUo-bi-D6i">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="addItemAction:" target="-2" id="WHi-5b-lLw"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="gx6-Pi-grC" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="8" id="0M2-Yk-0Uj"/>
                 <constraint firstAttribute="trailing" secondItem="obc-F3-Fsu" secondAttribute="trailing" constant="8" id="2Dr-yg-hmC"/>
                 <constraint firstItem="hIZ-1Z-ixv" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="32" id="3yu-Vh-xI3"/>
                 <constraint firstItem="jhZ-hr-aFa" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="11" id="4RX-Vf-nxo"/>
+                <constraint firstItem="il4-oa-uOq" firstAttribute="top" secondItem="obc-F3-Fsu" secondAttribute="top" id="8c0-H5-yZO"/>
                 <constraint firstItem="obc-F3-Fsu" firstAttribute="leading" secondItem="eD7-MX-Unq" secondAttribute="trailing" constant="8" symbolic="YES" id="9Rb-UB-MPd"/>
                 <constraint firstItem="ivY-lf-5u5" firstAttribute="centerY" secondItem="mBt-1p-omP" secondAttribute="centerY" id="DjR-iW-rdt"/>
                 <constraint firstAttribute="bottom" secondItem="hIZ-1Z-ixv" secondAttribute="bottom" id="VZZ-zJ-vR2"/>
@@ -205,11 +217,14 @@
                 <constraint firstItem="eD7-MX-Unq" firstAttribute="leading" secondItem="LXt-eI-UKy" secondAttribute="trailing" constant="8" symbolic="YES" id="hwa-pu-KCj"/>
                 <constraint firstItem="mBt-1p-omP" firstAttribute="leading" secondItem="eD7-MX-Unq" secondAttribute="trailing" constant="8" id="i9o-HZ-QkM"/>
                 <constraint firstItem="h2L-pI-k6n" firstAttribute="centerX" secondItem="hIZ-1Z-ixv" secondAttribute="centerX" id="jsm-7U-v92"/>
+                <constraint firstItem="il4-oa-uOq" firstAttribute="leading" secondItem="obc-F3-Fsu" secondAttribute="leading" id="mNK-T0-ebi"/>
                 <constraint firstItem="eD7-MX-Unq" firstAttribute="leading" secondItem="hIZ-1Z-ixv" secondAttribute="trailing" id="mwb-hl-grA"/>
                 <constraint firstItem="gx6-Pi-grC" firstAttribute="centerY" secondItem="ivY-lf-5u5" secondAttribute="centerY" id="pa0-dj-v5y"/>
                 <constraint firstItem="eD7-MX-Unq" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="8" id="tEN-oc-KWF"/>
                 <constraint firstItem="obc-F3-Fsu" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="37" id="tPI-1h-ooM"/>
+                <constraint firstItem="il4-oa-uOq" firstAttribute="bottom" secondItem="obc-F3-Fsu" secondAttribute="bottom" id="tt2-xB-Grc"/>
                 <constraint firstAttribute="trailing" secondItem="jhZ-hr-aFa" secondAttribute="trailing" constant="11" id="xZg-xo-Mrd"/>
+                <constraint firstItem="il4-oa-uOq" firstAttribute="trailing" secondItem="obc-F3-Fsu" secondAttribute="trailing" id="zZb-dw-4PI"/>
             </constraints>
             <point key="canvasLocation" x="170.5" y="51"/>
         </customView>
@@ -219,6 +234,7 @@
         <image name="NSTouchBarAddTemplate" width="14" height="13"/>
         <image name="alarm" catalog="system" width="15" height="16"/>
         <image name="bookmark" catalog="system" width="14" height="16"/>
+        <image name="bookmark.fill" catalog="system" width="14" height="16"/>
         <image name="trash" catalog="system" width="15" height="17"/>
     </resources>
 </document>

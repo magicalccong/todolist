@@ -24,6 +24,7 @@ static NSString * rowId = @"RowID";
 @property (nonatomic, assign) NSInteger globalIndex;
 @property (weak) IBOutlet NSScrollView *tiptextv1;
 @property (nonatomic, weak) IBOutlet NSButton *addBtn;
+@property (weak) IBOutlet NSButton *startEditBtn;
 
 
 @end
@@ -62,12 +63,18 @@ static NSString * rowId = @"RowID";
     if (self.dataSource.count) {
         self.placeHold.hidden = YES;
         self.listTBMainV.hidden = NO;
+        self.startEditBtn.hidden = YES;
+        self.markBtn.enabled = YES;
     }else{
         [self.tiptextv1.documentView removeFromSuperview];
         self.placeHold.hidden = NO;
         self.listTBMainV.hidden = YES;
+        self.startEditBtn.hidden = NO;
+        self.markBtn.enabled = NO;
+        self.markBtn.state = NSControlStateValueOff;
     }
-    self.addBtn.enabled = YES;
+    NSLog(@"%ld",self.dataSource.count);
+    [self sortDataWithEditTime];
     return self.dataSource.count;
 }
 
@@ -96,8 +103,8 @@ static NSString * rowId = @"RowID";
 }
 -(void)tableViewSelectionDidChange:(NSNotification *)notification {
     NSTableView * tbv = notification.object;
-    self.globalIndex = tbv.selectedRow >= 0 ? tbv.selectedRow : 0;
     if (tbv.selectedRow >= 0) {
+        self.globalIndex = tbv.selectedRow;
         ListItemModel * model = self.dataSource[tbv.selectedRow];
         [self makeTextV:model.contentTX shouldBeFirst:NO];
         NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
@@ -107,7 +114,9 @@ static NSString * rowId = @"RowID";
                 if (self.globalIndex) {
                     self.globalIndex -= 1;
                 }
-                [self.listTB reloadData];
+//                [self.listTB reloadData];
+                self.addBtn.enabled = YES;
+                [self.listTB removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationSlideDown];
                 [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] byExtendingSelection:NO];
                 break;
             }
@@ -122,42 +131,113 @@ static NSString * rowId = @"RowID";
         return;
     }
     NSTextView * tmp = notification.object;
-    ListItemModel * model = self.dataSource[self.globalIndex];
+    ListItemModel * model = self.dataSource[self.listTB.selectedRow];
     model.contentTX = tmp.string;
     model.cellTitle = [tmp.string isEqualToString:@""]?@"新建备忘录":tmp.string;
     model.isDone = NO;
     model.editTime = [NSDate date];
+    if (tmp.string.length) {
+        self.markBtn.enabled = YES;
+    }else {
+        self.markBtn.enabled = NO;
+    }
 //    [self.listTB reloadData];
+//    [self sortDataWithEditTime];
+    NSInteger globalMIndex = 0;
+    if (!model.markTop) {
+        NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
+        NSPredicate * predicate = [NSPredicate predicateWithFormat:@"markTop == %d",YES];
+        NSArray * tmpCountMarkDone = [tmpArr filteredArrayUsingPredicate:predicate];
+        globalMIndex = tmpCountMarkDone.count;
+    }
+    [self.dataSource removeObject:model];
+    [self.dataSource insertObject:model atIndex:globalMIndex];
+    [self.listTB moveRowAtIndex:self.globalIndex toIndex:globalMIndex];
+    self.globalIndex = globalMIndex;
     [self.listTB reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
-
 }
 #pragma mark - 自定义代理
 -(void)changeDoneStatus:(BOOL)status cellID:(NSInteger)cellID{
     NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
+    ListItemModel * tmpM = self.dataSource[self.listTB.selectedRow];
     [tmpArr enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         ListItemModel * model = obj;
         if (model.cellsortID == cellID) {
             model.isDone = status;
+            model.markTop = NO;
+            model.editTime = [NSDate date];
+            NSInteger changeIndex = 0;
+            if (status == YES) {
+                if (tmpM.cellsortID == model.cellsortID) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.markBtn.enabled = NO;
+                        self.markBtn.state = NO;
+                    });
+                }
+                NSPredicate * predicate = [NSPredicate predicateWithFormat:@"isDone == %d",NO];
+                NSArray * tmpCountUnDo = [tmpArr filteredArrayUsingPredicate:predicate];
+                changeIndex = tmpCountUnDo.count;
+            }else {
+                if (tmpM.cellsortID == model.cellsortID) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.markBtn.enabled = YES;
+                        self.markBtn.state = NO;
+                    });
+                }
+                NSPredicate * predicate = [NSPredicate predicateWithFormat:@"markTop == %d",YES];
+                NSArray * tmpCountMark = [tmpArr filteredArrayUsingPredicate:predicate];
+                changeIndex = tmpCountMark.count;
+            }
+                [self.dataSource removeObject:model];
+                [self.dataSource insertObject:model atIndex:changeIndex];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.listTB moveRowAtIndex:idx toIndex:changeIndex];
+                    [self.listTB reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:changeIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                });
+           
             *stop = YES;
         }
     }];
-    [self.listTB reloadData];
-
+//    [self sortDataWithEditTime];
+//    [self.listTB reloadData];
+//    [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:self.globalIndex] byExtendingSelection:NO];
 }
 
 #pragma mark - 按钮事件
 - (IBAction)markAction:(NSButton *)sender {
-    if (sender.state) {
-        [sender setImage:[NSImage imageWithSystemSymbolName:@"bookmark.fill" accessibilityDescription:nil]];
-    }else {
-        [sender setImage:[NSImage imageWithSystemSymbolName:@"bookmark" accessibilityDescription:nil]];
+    if (self.listTB.selectedRow >= 0) {
+        ListItemModel * model = self.dataSource[self.listTB.selectedRow];
+        model.markTop = sender.state;
+        model.editTime = [NSDate date];
+//        [self sortDataWithEditTime];
+        NSLog(@"model %d",model.markTop);
+//        [self.listTB reloadData];
+//        [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
+        NSInteger moveIndex = 0;
+        if (!sender.state) {
+            NSArray * tmpArr = [NSArray arrayWithArray:self.dataSource];
+            NSPredicate * predicate = [NSPredicate predicateWithFormat:@"markTop == %d",YES];
+            NSArray * tmpCountMarkDone = [tmpArr filteredArrayUsingPredicate:predicate];
+            moveIndex = tmpCountMarkDone.count;
+        }
+        NSLog(@"arrCount %ld -- index %ld -- selec %ld",moveIndex,self.globalIndex,self.listTB.selectedRow);
+        [self.dataSource removeObject:model];
+        [self.dataSource insertObject:model atIndex:moveIndex];
+        self.globalIndex = moveIndex;
+        [self.listTB moveRowAtIndex:self.listTB.selectedRow toIndex:moveIndex];
+        [self.listTB reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:moveIndex] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+//        self.globalIndex = 0;
+    
     }
+  
 }
+
 - (IBAction)trashAction:(NSButton *)sender {
     if (self.listTB.selectedRow >= 0) {
         [self.dataSource removeObjectAtIndex:self.listTB.selectedRow];
-        [self.listTB reloadData];
-        CGFloat nextIndex = 0;
+//        [self.listTB reloadData];
+        [self.listTB removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:self.listTB.selectedRow] withAnimation:NSTableViewAnimationSlideDown];
+        NSInteger nextIndex = 0;
         if (self.globalIndex<self.dataSource.count) {
             nextIndex = self.globalIndex;
         }else {
@@ -166,9 +246,11 @@ static NSString * rowId = @"RowID";
         NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:nextIndex];
         [self.listTB selectRowIndexes:indexSet byExtendingSelection:NO];
         if (self.dataSource.count == 0) {
+            [self.tiptextv1.documentView removeFromSuperview];
+            [self.listTB reloadData];
             return;
         }
-        ListItemModel * model = self.dataSource.firstObject;
+        ListItemModel * model = self.dataSource[nextIndex];
         [self makeTextV:model.contentTX shouldBeFirst:NO];
     }
     
@@ -186,11 +268,14 @@ static NSString * rowId = @"RowID";
     model.editTime = [NSDate date];
 //    self.trashBtn.tag = model.cellsortID;
     [self.dataSource insertObject:model atIndex:0];
-    [self.listTB reloadData];
+    if (self.dataSource.count > 1) {
+        [self.listTB insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:0] withAnimation:NSTableViewAnimationSlideUp];
+    }else {
+        [self.listTB reloadData];
+    }
     [self.listTB selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
     self.globalIndex = 0;
     [self makeTextV:@"" shouldBeFirst:YES];
-
 //    self.tipContextView.string = @"";
 
 }
@@ -202,11 +287,27 @@ static NSString * rowId = @"RowID";
     textV.string = textString;
     [self.view addSubview:textV];
     [self.tiptextv1 setDocumentView:textV];
+    ListItemModel * model = self.dataSource[self.globalIndex];
+    self.markBtn.state = model.markTop;
+    if (textString.length && !model.isDone) {
+        self.markBtn.enabled = YES;
+    }else {
+        self.markBtn.enabled = NO;
+    }
     if (should) {
         [self.view.window makeFirstResponder:textV];
     }
 }
-
+- (void)sortDataWithEditTime {
+    self.addBtn.enabled = YES;
+    NSSortDescriptor * sortD = [[NSSortDescriptor alloc]initWithKey:@"editTime" ascending:NO];
+    NSArray * sortedArray = [self.dataSource sortedArrayUsingDescriptors:@[sortD]];
+    NSSortDescriptor * sortCheck = [[NSSortDescriptor alloc]initWithKey:@"isDone" ascending:YES];
+    sortedArray = [sortedArray sortedArrayUsingDescriptors:@[sortCheck]];
+    NSSortDescriptor * sortMark = [[NSSortDescriptor alloc]initWithKey:@"markTop" ascending:NO];
+    sortedArray = [sortedArray sortedArrayUsingDescriptors:@[sortMark]];
+    self.dataSource = [NSMutableArray arrayWithArray:sortedArray];
+}
 - (IBAction)settingAction:(NSButton *)sender {
     self.dataSource = [NSMutableArray array];
     [self.listTB reloadData];

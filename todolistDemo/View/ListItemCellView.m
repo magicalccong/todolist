@@ -18,7 +18,8 @@
 @implementation ListItemCellView
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
-    self.layer.frame = CGRectMake(8, 0, 160, 30);
+    self.layer.frame = CGRectMake(8, 0, 160, 32);
+    
     // Drawing code here.
 }
 - (void)setModel:(ListItemModel *)model {
